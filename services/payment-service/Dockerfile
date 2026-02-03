@@ -7,7 +7,7 @@ WORKDIR /app
 COPY package.json package-lock.json* pnpm-lock.yaml* ./
 
 # 安装依赖
-RUN npm install -g pnpm && pnpm install --frozen-lockfile
+RUN npm install -g pnpm && pnpm install --no-frozen-lockfile
 
 # 复制源代码
 COPY . .
@@ -27,7 +27,7 @@ RUN npm install -g pnpm
 COPY package.json package-lock.json* pnpm-lock.yaml* ./
 
 # 安装生产依赖
-RUN pnpm install --frozen-lockfile --prod
+RUN pnpm install --no-frozen-lockfile --prod
 
 # 从构建阶段复制构建结果
 COPY --from=builder /app/dist ./dist
