@@ -281,3 +281,4 @@ MIT License
 如有问题或建议，请提交 Issue 或 Pull Request。
 # Cloud Build permissions fixed
 # Build triggered at Tue Feb  3 11:58:19 EST 2026
+# IAM permissions configured - Tue Feb  3 12:19:23 EST 2026
