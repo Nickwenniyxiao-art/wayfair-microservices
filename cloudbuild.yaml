@@ -177,24 +177,6 @@ steps:
       - 'CLOUDSDK_COMPUTE_REGION=us-central1'
       - 'CLOUDSDK_CONTAINER_CLUSTER=wayfair-microservices-cluster'
 
-images:
-  - 'us-central1-docker.pkg.dev/$PROJECT_ID/wayfair/wayfair-api-gateway:$SHORT_SHA'
-  - 'us-central1-docker.pkg.dev/$PROJECT_ID/wayfair/wayfair-product-service:$SHORT_SHA'
-  - 'us-central1-docker.pkg.dev/$PROJECT_ID/wayfair/wayfair-user-service:$SHORT_SHA'
-  - 'us-central1-docker.pkg.dev/$PROJECT_ID/wayfair/wayfair-cart-service:$SHORT_SHA'
-  - 'us-central1-docker.pkg.dev/$PROJECT_ID/wayfair/wayfair-order-service:$SHORT_SHA'
-  - 'us-central1-docker.pkg.dev/$PROJECT_ID/wayfair/wayfair-payment-service:$SHORT_SHA'
-  - 'us-central1-docker.pkg.dev/$PROJECT_ID/wayfair/wayfair-shipping-service:$SHORT_SHA'
-  - 'us-central1-docker.pkg.dev/$PROJECT_ID/wayfair/wayfair-return-service:$SHORT_SHA'
-
-options:
-  machineType: 'N1_HIGHCPU_8'
-  logging: CLOUD_LOGGING_ONLY
-
-serviceAccount: 'projects/cohesive-poetry-486213-q3/serviceAccounts/257159178095@cloudbuild.gserviceaccount.com'
-
-timeout: '3600s'
-
   # Build Frontend
   - name: 'gcr.io/cloud-builders/docker'
     args:
@@ -212,3 +194,23 @@ timeout: '3600s'
     args:
       - 'push'
       - 'us-central1-docker.pkg.dev/$PROJECT_ID/wayfair/wayfair-frontend:$SHORT_SHA'
+
+images:
+  - 'us-central1-docker.pkg.dev/$PROJECT_ID/wayfair/wayfair-api-gateway:$SHORT_SHA'
+  - 'us-central1-docker.pkg.dev/$PROJECT_ID/wayfair/wayfair-product-service:$SHORT_SHA'
+  - 'us-central1-docker.pkg.dev/$PROJECT_ID/wayfair/wayfair-user-service:$SHORT_SHA'
+  - 'us-central1-docker.pkg.dev/$PROJECT_ID/wayfair/wayfair-cart-service:$SHORT_SHA'
+  - 'us-central1-docker.pkg.dev/$PROJECT_ID/wayfair/wayfair-order-service:$SHORT_SHA'
+  - 'us-central1-docker.pkg.dev/$PROJECT_ID/wayfair/wayfair-payment-service:$SHORT_SHA'
+  - 'us-central1-docker.pkg.dev/$PROJECT_ID/wayfair/wayfair-shipping-service:$SHORT_SHA'
+  - 'us-central1-docker.pkg.dev/$PROJECT_ID/wayfair/wayfair-return-service:$SHORT_SHA'
+  - 'us-central1-docker.pkg.dev/$PROJECT_ID/wayfair/wayfair-frontend:$SHORT_SHA'
+
+options:
+  machineType: 'N1_HIGHCPU_8'
+  logging: CLOUD_LOGGING_ONLY
+
+serviceAccount: 'projects/cohesive-poetry-486213-q3/serviceAccounts/257159178095@cloudbuild.gserviceaccount.com'
+
+timeout: '3600s'
+
