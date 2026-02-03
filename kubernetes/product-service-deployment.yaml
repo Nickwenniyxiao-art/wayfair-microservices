@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
       - name: product-service
-        image: us-central1-docker.pkg.dev/cohesive-poetry-486213-q3/wayfair/wayfair-product-service:$SHORT_SHA
+        image: us-central1-docker.pkg.dev/cohesive-poetry-486213-q3/wayfair/wayfair-product-service
         ports:
         - containerPort: 3001
         env:
