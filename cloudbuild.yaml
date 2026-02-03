@@ -1,0 +1,168 @@
+steps:
+  # Step 1: Build API Gateway
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'build'
+      - '-t'
+      - 'gcr.io/$PROJECT_ID/wayfair-api-gateway:$SHORT_SHA'
+      - '-t'
+      - 'gcr.io/$PROJECT_ID/wayfair-api-gateway:latest'
+      - '-f'
+      - 'api-gateway/Dockerfile'
+      - '.'
+
+  # Step 2: Push API Gateway
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'push'
+      - 'gcr.io/$PROJECT_ID/wayfair-api-gateway:$SHORT_SHA'
+
+  # Step 3: Build Product Service
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'build'
+      - '-t'
+      - 'gcr.io/$PROJECT_ID/wayfair-product-service:$SHORT_SHA'
+      - '-t'
+      - 'gcr.io/$PROJECT_ID/wayfair-product-service:latest'
+      - '-f'
+      - 'services/product-service/Dockerfile'
+      - '.'
+
+  # Step 4: Push Product Service
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'push'
+      - 'gcr.io/$PROJECT_ID/wayfair-product-service:$SHORT_SHA'
+
+  # Step 5: Build User Service
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'build'
+      - '-t'
+      - 'gcr.io/$PROJECT_ID/wayfair-user-service:$SHORT_SHA'
+      - '-t'
+      - 'gcr.io/$PROJECT_ID/wayfair-user-service:latest'
+      - '-f'
+      - 'services/user-service/Dockerfile'
+      - '.'
+
+  # Step 6: Push User Service
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'push'
+      - 'gcr.io/$PROJECT_ID/wayfair-user-service:$SHORT_SHA'
+
+  # Step 7: Build Cart Service
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'build'
+      - '-t'
+      - 'gcr.io/$PROJECT_ID/wayfair-cart-service:$SHORT_SHA'
+      - '-t'
+      - 'gcr.io/$PROJECT_ID/wayfair-cart-service:latest'
+      - '-f'
+      - 'services/cart-service/Dockerfile'
+      - '.'
+
+  # Step 8: Push Cart Service
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'push'
+      - 'gcr.io/$PROJECT_ID/wayfair-cart-service:$SHORT_SHA'
+
+  # Step 9: Build Order Service
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'build'
+      - '-t'
+      - 'gcr.io/$PROJECT_ID/wayfair-order-service:$SHORT_SHA'
+      - '-t'
+      - 'gcr.io/$PROJECT_ID/wayfair-order-service:latest'
+      - '-f'
+      - 'services/order-service/Dockerfile'
+      - '.'
+
+  # Step 10: Push Order Service
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'push'
+      - 'gcr.io/$PROJECT_ID/wayfair-order-service:$SHORT_SHA'
+
+  # Step 11: Build Payment Service
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'build'
+      - '-t'
+      - 'gcr.io/$PROJECT_ID/wayfair-payment-service:$SHORT_SHA'
+      - '-t'
+      - 'gcr.io/$PROJECT_ID/wayfair-payment-service:latest'
+      - '-f'
+      - 'services/payment-service/Dockerfile'
+      - '.'
+
+  # Step 12: Push Payment Service
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'push'
+      - 'gcr.io/$PROJECT_ID/wayfair-payment-service:$SHORT_SHA'
+
+  # Step 13: Build Shipping Service
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'build'
+      - '-t'
+      - 'gcr.io/$PROJECT_ID/wayfair-shipping-service:$SHORT_SHA'
+      - '-t'
+      - 'gcr.io/$PROJECT_ID/wayfair-shipping-service:latest'
+      - '-f'
+      - 'services/shipping-service/Dockerfile'
+      - '.'
+
+  # Step 14: Push Shipping Service
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'push'
+      - 'gcr.io/$PROJECT_ID/wayfair-shipping-service:$SHORT_SHA'
+
+  # Step 15: Build Return Service
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'build'
+      - '-t'
+      - 'gcr.io/$PROJECT_ID/wayfair-return-service:$SHORT_SHA'
+      - '-t'
+      - 'gcr.io/$PROJECT_ID/wayfair-return-service:latest'
+      - '-f'
+      - 'services/return-service/Dockerfile'
+      - '.'
+
+  # Step 16: Push Return Service
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'push'
+      - 'gcr.io/$PROJECT_ID/wayfair-return-service:$SHORT_SHA'
+
+  # Step 17: Deploy API Gateway to Cloud Run
+  - name: 'gcr.io/cloud-builders/gke-deploy'
+    args:
+      - 'run'
+      - '--filename=kubernetes/'
+      - '--image=gcr.io/$PROJECT_ID/wayfair-api-gateway:$SHORT_SHA'
+      - '--location=us-central1'
+
+images:
+  - 'gcr.io/$PROJECT_ID/wayfair-api-gateway:$SHORT_SHA'
+  - 'gcr.io/$PROJECT_ID/wayfair-product-service:$SHORT_SHA'
+  - 'gcr.io/$PROJECT_ID/wayfair-user-service:$SHORT_SHA'
+  - 'gcr.io/$PROJECT_ID/wayfair-cart-service:$SHORT_SHA'
+  - 'gcr.io/$PROJECT_ID/wayfair-order-service:$SHORT_SHA'
+  - 'gcr.io/$PROJECT_ID/wayfair-payment-service:$SHORT_SHA'
+  - 'gcr.io/$PROJECT_ID/wayfair-shipping-service:$SHORT_SHA'
+  - 'gcr.io/$PROJECT_ID/wayfair-return-service:$SHORT_SHA'
+
+options:
+  machineType: 'N1_HIGHCPU_8'
+  logging: CLOUD_LOGGING_ONLY
+
+timeout: '3600s'

@@ -1,0 +1,271 @@
+version: '3.8'
+
+services:
+  # MySQL 数据库
+  mysql:
+    image: mysql:8.0
+    container_name: wayfair-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root123456
+      MYSQL_DATABASE: wayfair
+      TZ: 'Asia/Shanghai'
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./scripts/init-databases.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - wayfair-network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      timeout: 20s
+      retries: 10
+
+  # Redis 缓存
+  redis:
+    image: redis:7-alpine
+    container_name: wayfair-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - wayfair-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      timeout: 20s
+      retries: 10
+
+  # API 网关
+  api-gateway:
+    build:
+      context: ./api-gateway
+      dockerfile: Dockerfile
+    container_name: wayfair-api-gateway
+    ports:
+      - "3000:3000"
+    environment:
+      NODE_ENV: development
+      PORT: 3000
+      LOG_LEVEL: info
+      PRODUCT_SERVICE_URL: http://product-service:3001
+      USER_SERVICE_URL: http://user-service:3002
+      CART_SERVICE_URL: http://cart-service:3003
+      ORDER_SERVICE_URL: http://order-service:3004
+      PAYMENT_SERVICE_URL: http://payment-service:3005
+      SHIPPING_SERVICE_URL: http://shipping-service:3006
+      RETURN_SERVICE_URL: http://return-service:3007
+      JWT_SECRET: your-secret-key-change-in-production
+    depends_on:
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - wayfair-network
+    restart: unless-stopped
+
+  # 产品管理微服务
+  product-service:
+    build:
+      context: ./services/product-service
+      dockerfile: Dockerfile
+    container_name: wayfair-product-service
+    ports:
+      - "3001:3001"
+    environment:
+      NODE_ENV: development
+      PORT: 3001
+      DATABASE_URL: mysql://root:root123456@mysql:3306/product_db
+      REDIS_URL: redis://redis:6379/0
+      LOG_LEVEL: info
+    depends_on:
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - wayfair-network
+    restart: unless-stopped
+
+  # 用户管理微服务
+  user-service:
+    build:
+      context: ./services/user-service
+      dockerfile: Dockerfile
+    container_name: wayfair-user-service
+    ports:
+      - "3002:3002"
+    environment:
+      NODE_ENV: development
+      PORT: 3002
+      DATABASE_URL: mysql://root:root123456@mysql:3306/user_db
+      REDIS_URL: redis://redis:6379/1
+      JWT_SECRET: your-secret-key-change-in-production
+      LOG_LEVEL: info
+    depends_on:
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - wayfair-network
+    restart: unless-stopped
+
+  # 购物车微服务
+  cart-service:
+    build:
+      context: ./services/cart-service
+      dockerfile: Dockerfile
+    container_name: wayfair-cart-service
+    ports:
+      - "3003:3003"
+    environment:
+      NODE_ENV: development
+      PORT: 3003
+      DATABASE_URL: mysql://root:root123456@mysql:3306/cart_db
+      REDIS_URL: redis://redis:6379/2
+      LOG_LEVEL: info
+    depends_on:
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - wayfair-network
+    restart: unless-stopped
+
+  # 订单微服务
+  order-service:
+    build:
+      context: ./services/order-service
+      dockerfile: Dockerfile
+    container_name: wayfair-order-service
+    ports:
+      - "3004:3004"
+    environment:
+      NODE_ENV: development
+      PORT: 3004
+      DATABASE_URL: mysql://root:root123456@mysql:3306/order_db
+      REDIS_URL: redis://redis:6379/3
+      LOG_LEVEL: info
+    depends_on:
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - wayfair-network
+    restart: unless-stopped
+
+  # 支付微服务
+  payment-service:
+    build:
+      context: ./services/payment-service
+      dockerfile: Dockerfile
+    container_name: wayfair-payment-service
+    ports:
+      - "3005:3005"
+    environment:
+      NODE_ENV: development
+      PORT: 3005
+      DATABASE_URL: mysql://root:root123456@mysql:3306/payment_db
+      REDIS_URL: redis://redis:6379/4
+      STRIPE_SECRET_KEY: sk_test_your_key_here
+      LOG_LEVEL: info
+    depends_on:
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - wayfair-network
+    restart: unless-stopped
+
+  # 物流微服务
+  shipping-service:
+    build:
+      context: ./services/shipping-service
+      dockerfile: Dockerfile
+    container_name: wayfair-shipping-service
+    ports:
+      - "3006:3006"
+    environment:
+      NODE_ENV: development
+      PORT: 3006
+      DATABASE_URL: mysql://root:root123456@mysql:3306/shipping_db
+      REDIS_URL: redis://redis:6379/5
+      LOG_LEVEL: info
+    depends_on:
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - wayfair-network
+    restart: unless-stopped
+
+  # 退货微服务
+  return-service:
+    build:
+      context: ./services/return-service
+      dockerfile: Dockerfile
+    container_name: wayfair-return-service
+    ports:
+      - "3007:3007"
+    environment:
+      NODE_ENV: development
+      PORT: 3007
+      DATABASE_URL: mysql://root:root123456@mysql:3306/return_db
+      REDIS_URL: redis://redis:6379/6
+      LOG_LEVEL: info
+    depends_on:
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - wayfair-network
+    restart: unless-stopped
+
+  # Storefront 前端
+  storefront:
+    build:
+      context: ./frontends/storefront
+      dockerfile: Dockerfile
+    container_name: wayfair-storefront
+    ports:
+      - "5173:5173"
+    environment:
+      VITE_API_URL: http://localhost:3000
+      NODE_ENV: development
+    depends_on:
+      - api-gateway
+    networks:
+      - wayfair-network
+    restart: unless-stopped
+
+  # Admin Panel 前端
+  admin-panel:
+    build:
+      context: ./frontends/admin-panel
+      dockerfile: Dockerfile
+    container_name: wayfair-admin-panel
+    ports:
+      - "5174:5173"
+    environment:
+      VITE_API_URL: http://localhost:3000
+      NODE_ENV: development
+    depends_on:
+      - api-gateway
+    networks:
+      - wayfair-network
+    restart: unless-stopped
+
+volumes:
+  mysql_data:
+  redis_data:
+
+networks:
+  wayfair-network:
+    driver: bridge
