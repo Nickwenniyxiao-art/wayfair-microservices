@@ -5,6 +5,7 @@ namespace: wayfair
 
 resources:
   - namespace.yaml
+  - mysql-storageclass.yaml
   - mysql-pvc.yaml
   - mysql-deployment.yaml
   - api-gateway-deployment.yaml
