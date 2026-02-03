@@ -6,3 +6,5 @@ build/
 .idea/
 .manus-logs/
 .DS_Store
+google-cloud-sdk/
+google-cloud-cli-*.tar.gz

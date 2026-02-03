@@ -15,6 +15,7 @@ resources:
   - payment-service-deployment.yaml
   - shipping-service-deployment.yaml
   - return-service-deployment.yaml
+  - frontend-deployment.yaml
 
 images:
   - name: us-central1-docker.pkg.dev/cohesive-poetry-486213-q3/wayfair/wayfair-api-gateway
@@ -32,4 +33,6 @@ images:
   - name: us-central1-docker.pkg.dev/cohesive-poetry-486213-q3/wayfair/wayfair-shipping-service
     newTag: $SHORT_SHA
   - name: us-central1-docker.pkg.dev/cohesive-poetry-486213-q3/wayfair/wayfair-return-service
+    newTag: $SHORT_SHA
+  - name: us-central1-docker.pkg.dev/cohesive-poetry-486213-q3/wayfair/wayfair-frontend
     newTag: $SHORT_SHA

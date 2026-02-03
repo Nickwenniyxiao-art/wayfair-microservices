@@ -194,3 +194,21 @@ options:
 serviceAccount: 'projects/cohesive-poetry-486213-q3/serviceAccounts/257159178095@cloudbuild.gserviceaccount.com'
 
 timeout: '3600s'
+
+  # Build Frontend
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'build'
+      - '-t'
+      - 'us-central1-docker.pkg.dev/$PROJECT_ID/wayfair/wayfair-frontend:$SHORT_SHA'
+      - '-t'
+      - 'us-central1-docker.pkg.dev/$PROJECT_ID/wayfair/wayfair-frontend:latest'
+      - '-f'
+      - 'frontend/Dockerfile'
+      - 'frontend/'
+
+  # Push Frontend
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'push'
+      - 'us-central1-docker.pkg.dev/$PROJECT_ID/wayfair/wayfair-frontend:$SHORT_SHA'
