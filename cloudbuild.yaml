@@ -164,7 +164,6 @@ images:
 options:
   machineType: 'N1_HIGHCPU_8'
   logging: CLOUD_LOGGING_ONLY
-  substitutionOption: 'ALLOW_LOOSE'
 
 serviceAccount: 'projects/cohesive-poetry-486213-q3/serviceAccounts/257159178095@cloudbuild.gserviceaccount.com'
 
