@@ -9,7 +9,7 @@ steps:
       - 'gcr.io/$PROJECT_ID/wayfair-api-gateway:latest'
       - '-f'
       - 'api-gateway/Dockerfile'
-      - '.'
+      - 'api-gateway/'
 
   # Step 2: Push API Gateway
   - name: 'gcr.io/cloud-builders/docker'
@@ -27,7 +27,7 @@ steps:
       - 'gcr.io/$PROJECT_ID/wayfair-product-service:latest'
       - '-f'
       - 'services/product-service/Dockerfile'
-      - '.'
+      - 'services/product-service/'
 
   # Step 4: Push Product Service
   - name: 'gcr.io/cloud-builders/docker'
