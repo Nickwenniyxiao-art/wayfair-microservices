@@ -1,0 +1,33 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: wayfair
+
+resources:
+  - namespace.yaml
+  - api-gateway-deployment.yaml
+  - product-service-deployment.yaml
+  - user-service-deployment.yaml
+  - cart-service-deployment.yaml
+  - order-service-deployment.yaml
+  - payment-service-deployment.yaml
+  - shipping-service-deployment.yaml
+  - return-service-deployment.yaml
+
+images:
+  - name: us-central1-docker.pkg.dev/cohesive-poetry-486213-q3/wayfair/wayfair-api-gateway
+    newTag: $SHORT_SHA
+  - name: us-central1-docker.pkg.dev/cohesive-poetry-486213-q3/wayfair/wayfair-product-service
+    newTag: $SHORT_SHA
+  - name: us-central1-docker.pkg.dev/cohesive-poetry-486213-q3/wayfair/wayfair-user-service
+    newTag: $SHORT_SHA
+  - name: us-central1-docker.pkg.dev/cohesive-poetry-486213-q3/wayfair/wayfair-cart-service
+    newTag: $SHORT_SHA
+  - name: us-central1-docker.pkg.dev/cohesive-poetry-486213-q3/wayfair/wayfair-order-service
+    newTag: $SHORT_SHA
+  - name: us-central1-docker.pkg.dev/cohesive-poetry-486213-q3/wayfair/wayfair-payment-service
+    newTag: $SHORT_SHA
+  - name: us-central1-docker.pkg.dev/cohesive-poetry-486213-q3/wayfair/wayfair-shipping-service
+    newTag: $SHORT_SHA
+  - name: us-central1-docker.pkg.dev/cohesive-poetry-486213-q3/wayfair/wayfair-return-service
+    newTag: $SHORT_SHA

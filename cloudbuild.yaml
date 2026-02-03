@@ -144,18 +144,20 @@ steps:
       - 'us-central1-docker.pkg.dev/$PROJECT_ID/wayfair/wayfair-return-service:$SHORT_SHA'
 
 
-  # Step 17: Replace $SHORT_SHA in Kubernetes manifests
+  # Step 17: Replace $SHORT_SHA in kustomization.yaml using envsubst
   - name: 'ubuntu'
     args:
       - 'bash'
       - '-c'
       - |
-        for file in kubernetes/*-deployment.yaml; do
-          sed -i "s/\$SHORT_SHA/${SHORT_SHA}/g" "$file"
-        done
-        echo "Replaced \$SHORT_SHA with ${SHORT_SHA} in all deployment files"
+        apt-get update && apt-get install -y gettext-base
+        export SHORT_SHA=${SHORT_SHA}
+        envsubst < kubernetes/kustomization.yaml > kubernetes/kustomization-final.yaml
+        mv kubernetes/kustomization-final.yaml kubernetes/kustomization.yaml
+        echo "=== Final kustomization.yaml ==="
+        cat kubernetes/kustomization.yaml
 
-  # Step 18: Deploy to GKE using kubectl
+  # Step 18: Get GKE cluster credentials
   - name: 'gcr.io/cloud-builders/gcloud'
     args:
       - 'container'
@@ -165,11 +167,11 @@ steps:
       - '--region=us-central1'
       - '--project=$PROJECT_ID'
 
-  # Step 19: Apply Kubernetes manifests
+  # Step 19: Deploy to GKE using kubectl with kustomize
   - name: 'gcr.io/cloud-builders/kubectl'
     args:
       - 'apply'
-      - '-f'
+      - '-k'
       - 'kubernetes/'
     env:
       - 'CLOUDSDK_COMPUTE_REGION=us-central1'
