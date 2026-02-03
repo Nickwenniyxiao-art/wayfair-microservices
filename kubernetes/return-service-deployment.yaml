@@ -1,0 +1,62 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: wayfair-return-service
+  namespace: wayfair
+  labels:
+    app: wayfair-return-service
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: wayfair-return-service
+  template:
+    metadata:
+      labels:
+        app: wayfair-return-service
+    spec:
+      containers:
+      - name: return-service
+        image: us-central1-docker.pkg.dev/cohesive-poetry-486213-q3/wayfair/wayfair-return-service:latest
+        ports:
+        - containerPort: 3007
+        env:
+        - name: NODE_ENV
+          value: "production"
+        - name: PORT
+          value: "3007"
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "250m"
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 3007
+          initialDelaySeconds: 30
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 3007
+          initialDelaySeconds: 10
+          periodSeconds: 5
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: wayfair-return-service
+  namespace: wayfair
+  labels:
+    app: wayfair-return-service
+spec:
+  type: ClusterIP
+  ports:
+  - port: 3007
+    targetPort: 3007
+    protocol: TCP
+  selector:
+    app: wayfair-return-service
