@@ -45,7 +45,7 @@ steps:
       - 'gcr.io/$PROJECT_ID/wayfair-user-service:latest'
       - '-f'
       - 'services/user-service/Dockerfile'
-      - '.'
+      - 'services/user-service/'
 
   # Step 6: Push User Service
   - name: 'gcr.io/cloud-builders/docker'
@@ -63,7 +63,7 @@ steps:
       - 'gcr.io/$PROJECT_ID/wayfair-cart-service:latest'
       - '-f'
       - 'services/cart-service/Dockerfile'
-      - '.'
+      - 'services/cart-service/'
 
   # Step 8: Push Cart Service
   - name: 'gcr.io/cloud-builders/docker'
@@ -81,7 +81,7 @@ steps:
       - 'gcr.io/$PROJECT_ID/wayfair-order-service:latest'
       - '-f'
       - 'services/order-service/Dockerfile'
-      - '.'
+      - 'services/order-service/'
 
   # Step 10: Push Order Service
   - name: 'gcr.io/cloud-builders/docker'
@@ -99,7 +99,7 @@ steps:
       - 'gcr.io/$PROJECT_ID/wayfair-payment-service:latest'
       - '-f'
       - 'services/payment-service/Dockerfile'
-      - '.'
+      - 'services/payment-service/'
 
   # Step 12: Push Payment Service
   - name: 'gcr.io/cloud-builders/docker'
@@ -117,7 +117,7 @@ steps:
       - 'gcr.io/$PROJECT_ID/wayfair-shipping-service:latest'
       - '-f'
       - 'services/shipping-service/Dockerfile'
-      - '.'
+      - 'services/shipping-service/'
 
   # Step 14: Push Shipping Service
   - name: 'gcr.io/cloud-builders/docker'
@@ -135,7 +135,7 @@ steps:
       - 'gcr.io/$PROJECT_ID/wayfair-return-service:latest'
       - '-f'
       - 'services/return-service/Dockerfile'
-      - '.'
+      - 'services/return-service/'
 
   # Step 16: Push Return Service
   - name: 'gcr.io/cloud-builders/docker'
