@@ -151,9 +151,9 @@ steps:
       - '-c'
       - |
         for file in kubernetes/*-deployment.yaml; do
-          sed -i "s/\$SHORT_SHA/$SHORT_SHA/g" $$file
+          sed -i "s/\$SHORT_SHA/${SHORT_SHA}/g" "$file"
         done
-        echo "Replaced \$SHORT_SHA with $SHORT_SHA in all deployment files"
+        echo "Replaced \$SHORT_SHA with ${SHORT_SHA} in all deployment files"
 
   # Step 18: Deploy to GKE using kubectl
   - name: 'gcr.io/cloud-builders/gcloud'
