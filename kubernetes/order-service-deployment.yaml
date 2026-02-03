@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
       - name: order-service
-        image: us-central1-docker.pkg.dev/cohesive-poetry-486213-q3/wayfair/wayfair-order-service:latest
+        image: us-central1-docker.pkg.dev/cohesive-poetry-486213-q3/wayfair/wayfair-order-service:$SHORT_SHA
         ports:
         - containerPort: 3004
         env:

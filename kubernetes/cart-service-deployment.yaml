@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
       - name: cart-service
-        image: us-central1-docker.pkg.dev/cohesive-poetry-486213-q3/wayfair/wayfair-cart-service:latest
+        image: us-central1-docker.pkg.dev/cohesive-poetry-486213-q3/wayfair/wayfair-cart-service:$SHORT_SHA
         ports:
         - containerPort: 3003
         env:

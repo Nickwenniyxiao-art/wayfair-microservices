@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
       - name: shipping-service
-        image: us-central1-docker.pkg.dev/cohesive-poetry-486213-q3/wayfair/wayfair-shipping-service:latest
+        image: us-central1-docker.pkg.dev/cohesive-poetry-486213-q3/wayfair/wayfair-shipping-service:$SHORT_SHA
         ports:
         - containerPort: 3006
         env:

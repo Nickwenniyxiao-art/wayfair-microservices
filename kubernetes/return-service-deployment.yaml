@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
       - name: return-service
-        image: us-central1-docker.pkg.dev/cohesive-poetry-486213-q3/wayfair/wayfair-return-service:latest
+        image: us-central1-docker.pkg.dev/cohesive-poetry-486213-q3/wayfair/wayfair-return-service:$SHORT_SHA
         ports:
         - containerPort: 3007
         env:

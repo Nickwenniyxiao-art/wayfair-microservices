@@ -1,0 +1,17 @@
+steps:
+  # Create GKE cluster
+  - name: 'gcr.io/cloud-builders/kubectl'
+    args:
+      - 'cluster-create'
+      - 'wayfair-microservices-cluster'
+      - '--region=us-central1'
+      - '--num-nodes=3'
+      - '--machine-type=n1-standard-2'
+      - '--enable-autoscaling'
+      - '--min-nodes=1'
+      - '--max-nodes=5'
+    env:
+      - 'CLOUDSDK_COMPUTE_REGION=us-central1'
+      - 'CLOUDSDK_CONTAINER_CLUSTER=wayfair-microservices-cluster'
+
+serviceAccount: 'projects/cohesive-poetry-486213-q3/serviceAccounts/257159178095@cloudbuild.gserviceaccount.com'

@@ -143,37 +143,24 @@ steps:
       - 'push'
       - 'us-central1-docker.pkg.dev/$PROJECT_ID/wayfair/wayfair-return-service:$SHORT_SHA'
 
-
-  # Step 17: Replace $SHORT_SHA in Kubernetes manifests
-  - name: 'ubuntu'
+  # Step 17: Create GKE cluster if it doesn't exist
+  - name: 'gcr.io/cloud-builders/gke-deploy'
     args:
-      - 'bash'
-      - '-c'
-      - |
-        for file in kubernetes/*-deployment.yaml; do
-          sed -i "s/\$SHORT_SHA/$SHORT_SHA/g" $$file
-        done
-        echo "Replaced \$SHORT_SHA with $SHORT_SHA in all deployment files"
+      - 'run'
+      - '--filename=kubernetes/'
+      - '--image=us-central1-docker.pkg.dev/$PROJECT_ID/wayfair/wayfair-api-gateway:$SHORT_SHA'
+      - '--location=us-central1'
+      - '--cluster=wayfair-microservices-cluster'
+    onFailure: 'CONTINUE'
 
-  # Step 18: Deploy to GKE using kubectl
-  - name: 'gcr.io/cloud-builders/gcloud'
+  # Step 18: Deploy to GKE cluster
+  - name: 'gcr.io/cloud-builders/gke-deploy'
     args:
-      - 'container'
-      - 'clusters'
-      - 'get-credentials'
-      - 'wayfair-microservices-cluster'
-      - '--region=us-central1'
-      - '--project=$PROJECT_ID'
-
-  # Step 19: Apply Kubernetes manifests
-  - name: 'gcr.io/cloud-builders/kubectl'
-    args:
-      - 'apply'
-      - '-f'
-      - 'kubernetes/'
-    env:
-      - 'CLOUDSDK_COMPUTE_REGION=us-central1'
-      - 'CLOUDSDK_CONTAINER_CLUSTER=wayfair-microservices-cluster'
+      - 'run'
+      - '--filename=kubernetes/'
+      - '--image=us-central1-docker.pkg.dev/$PROJECT_ID/wayfair/wayfair-api-gateway:$SHORT_SHA'
+      - '--location=us-central1'
+      - '--cluster=wayfair-microservices-cluster'
 
 images:
   - 'us-central1-docker.pkg.dev/$PROJECT_ID/wayfair/wayfair-api-gateway:$SHORT_SHA'
