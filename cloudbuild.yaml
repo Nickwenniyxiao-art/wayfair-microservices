@@ -144,12 +144,14 @@ steps:
       - 'us-central1-docker.pkg.dev/$PROJECT_ID/wayfair/wayfair-return-service:$SHORT_SHA'
 
 
-  # Step 17: Deploy to GKE using kubectl
-  - name: 'gcr.io/cloud-builders/kubectl'
+  # Step 17: Deploy to GKE using gke-deploy
+  - name: 'gcr.io/cloud-builders/gke-deploy'
     args:
-      - 'apply'
-      - '-f'
-      - 'kubernetes/'
+      - run
+      - '--filename=kubernetes/'
+      - '--image=$_IMAGE'
+      - '--location=us-central1'
+      - '--cluster=wayfair-microservices-cluster'
     env:
       - 'CLOUDSDK_COMPUTE_REGION=us-central1'
       - 'CLOUDSDK_CONTAINER_CLUSTER=wayfair-microservices-cluster'
